@@ -39,7 +39,9 @@ for zipcode in zipcodelist:
             opener = urllib2.build_opener(cookie_handler)
             opener.open(lgurl,dt)
 
-            # the html we will parse (which is a combination of different gender,zipcode and age range)
+           #==========================================================================================================
+           # the html we will parse (which is a combination of different gender,zipcode and age range)
+           #==========================================================================================================
             queryurl = 'http://www.match.com/SearchReskin/?dls=1&st=Q&CLR=true&%3fEXEC=GO&SB=radius&lid=226&'+gender+'&uage='+age[0]+'&ua='+age[0]+'&pc='+zipcode+'&dist=50&po=1&oln=0&lage='+age[1];
             response = opener.open(queryurl)
             urlcontent = response.read()
@@ -72,7 +74,9 @@ for zipcode in zipcodelist:
                     if not os.path.exists(storePath+PeopleName):
                         os.makedirs(storePath+PeopleName)
 
+                    #==========================================================================================================
                     #Getting customer age info by parsing html
+                    #==========================================================================================================
                     GenderAgeList = []
 
                     SeekingTag = newSoup.find('strong',text ='Seeking')
@@ -86,8 +90,11 @@ for zipcode in zipcodelist:
                     ddList.append(GenderAgeList[0])
                     dtList.append('Gender')
                     ddList.append(GenderAgeList[3])
-
+                                 
+                                 
+                    #==========================================================================================================
                     #Getting customer personal infomation such as relationship,have kid or not... etc..
+                    #==========================================================================================================
                     PersonalInfo = newSoup.dl
                     dic_PersonalInfo ={}
                     countele2 = 0
@@ -112,8 +119,12 @@ for zipcode in zipcodelist:
 
                             ddList.append(str(ele2.string).lower())
                         countele2 = countele2+1
-
+                        
+                        
+                        
+                    #==========================================================================================================
                     #Getting customers' Interests by parsing html
+                    #==========================================================================================================
                     interests = []
                     temp = str(newSoup.find_all('p',class_='interests'))
                     temp2 = re.sub(r'<.*>|\]|\[',',',temp)
@@ -125,8 +136,12 @@ for zipcode in zipcodelist:
 
                     dtList.append('interests')
                     ddList.append(interests)
-
+                    
+                    
+                    
+                    #==========================================================================================================           
                     #Getting customers' favourate pets
+                    #==========================================================================================================
                     PetsList = []
                     ttt = newSoup.find('h3',text = 'Pets')
                     if ttt == None:
@@ -143,16 +158,21 @@ for zipcode in zipcodelist:
                         dtList.append('Pets')
                         ddList.append(PetsList)
                     dic_PersonalInfo = dict(zip(dtList,ddList))
-
-
+                    
+                    
+                    
+           
+                    #==========================================================================================================
                     #store all the information of one person in one txt file
+                    #==========================================================================================================
                     txtName = PeopleName+'_BasicInfo.txt'
                     txtPath = storePath+PeopleName+'/'+txtName
                     with open(txtPath,'w') as outfile:
                         json.dump(dic_PersonalInfo,outfile)
 
-
+                    #==========================================================================================================
                     #Getting the picture of customer and download it
+                    #==========================================================================================================
                     imgcluster = newSoup.find_all('img')
                     picNum = 1
                     for ele in imgcluster:
